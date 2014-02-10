@@ -1,10 +1,10 @@
-'''
+"""
 Defines classes for parsing and compiling box declarations, which consist of a
 name followed by an attribute list in square brackets. Box declarations must
 occupy a single line and must not contain arrows (`->`)::
 
     <name> [<attributelist>]
-'''
+"""
 
 import re
 
@@ -22,34 +22,34 @@ from fbrelation.declarations.box import FunctionBoxDeclaration, \
                                         ReceiverBoxDeclaration
 
 class BoxSyntax(object):
-    '''
+    """
     Represents the abstract syntax of a box declaration, which has a name and
     an attribute list.
-    '''
+    """
 
     def __init__(self, name, attributeList):
-        '''
+        """
         Initializes a new box syntax object with the given name and attribute
         list.
-        '''
+        """
         self.name = name
         self.attributes = attributeList
 
     def __getitem__(self, key):
-        '''
+        """
         Allows the use of square-bracket notation to retrieve the value of
         one of this box's attributes.
-        '''
+        """
         return self.attributes[key]
 
     def __str__(self):
-        '''
+        """
         Converts the syntax object into its raw string representation.
-        '''
+        """
         return '%s [%s]' % (self.name, str(self.attributes))
 
     def compile(self, boxes, relations):
-        '''
+        """
         Checks and compiles the abstract syntax structure to create a new
         :class:`.BoxDeclaration` object of the appropriate subclass.
 
@@ -58,7 +58,7 @@ class BoxSyntax(object):
 
         :returns: the newly created box declaration.
         :raises:  a :class:`.CompilationError` if any static checks fail.
-        '''
+        """
         # Ensure that the box name is not a duplicate
         if find(lambda b: b.name == self.name, boxes):
             raise CompilationError(
@@ -123,12 +123,12 @@ class BoxSyntax(object):
 
     @classmethod
     def parse(cls, text):
-        '''
+        """
         Parses the given input text to produce a new BoxSyntax object.
 
         :returns: the newly created box syntax object.
         :raises:  a :class:`.ParsingError` if syntax is invalid.
-        '''
+        """
         # Ensure that there are no extraneous brackets to confuse the regex
         if text.count('[') != 1 or text.count(']') != 1:
             raise ParsingError(

@@ -1,22 +1,22 @@
-'''
+"""
 Defines declaration classes for entire programs.
-'''
+"""
 
 class ProgramDeclaration(object):
-    '''
+    """
     Defines a program declaration, which consists of a series of individual
     relation constraint declarations.
-    '''
+    """
 
     def __init__(self, relationDeclarations):
-        '''
+        """
         Initializes a new program from the provided list of relation
         constraint declaration objects.
-        '''
+        """
         self.relations = relationDeclarations
 
     def execute(self):
-        '''
+        """
         Executes the program, creating and configuring an FBConstraintRelation
         for each relation declaration in the program.
 
@@ -24,7 +24,7 @@ class ProgramDeclaration(object):
                   declarations to their corresponding constraint objects.
         :raises:  an :class:`.ExecutionError` if any problems are encountered
                   at runtime.
-        '''
+        """
         # Collect a dictionary of name -> FBConstraintRelation mappings as
         # each relation is executed
         relationComponents = {}

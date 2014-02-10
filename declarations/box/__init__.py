@@ -1,6 +1,6 @@
-'''
+"""
 Defines classes for the different types of box declarations.
-'''
+"""
 
 from fbrelation.declarations.box.function    import FunctionBoxDeclaration
 from fbrelation.declarations.box.macrotool   import MacroInputBoxDeclaration, \

@@ -1,28 +1,28 @@
-'''
+"""
 Defines declaration classes for individual relation constraints within a
 program.
-'''
+"""
 
 import pyfbsdk
 
 class RelationDeclaration(object):
-    '''
+    """
     Represents a parsed and statically-checked relation constraint declaration.
     Consists of a name, a series of box declarations, and a series of
     connection declarations.
-    '''
+    """
 
     def __init__(self, name, boxDeclarations, connectionDeclarations):
-        '''
+        """
         Initializes a new relation declaration with the given name, using the
         provided box and connection declarations.
-        '''
+        """
         self.name = name
         self.boxes = boxDeclarations
         self.connections = connectionDeclarations
 
     def execute(self, relationComponents):
-        '''
+        """
         Executes the relation declaration, attempting to construct and
         configure an FBConstraintRelation object in the MotionBuilder scene.
 
@@ -33,7 +33,7 @@ class RelationDeclaration(object):
         :returns: the newly created (and activated) FBConstraintRelation.
         :raises:  an :class:`.ExecutionError` if any box or connection
                   declarations can not be executed.
-        '''
+        """
         # Create an actual relation constraint in the scene
         constraint = pyfbsdk.FBConstraintRelation(self.name)
         x, y = (0, 0)
@@ -62,22 +62,22 @@ class RelationDeclaration(object):
         return constraint
 
     def hasMacroTool(self, name):
-        '''
+        """
         Returns whether the relation contains a macro input or output box with
         the specified name.
-        '''
+        """
         for box in self.boxes:
             if box.name == name:
                 return box.supportsNode('')
         return False
 
     def getMacroNodeIndex(self, nodeName, isInput):
-        '''
+        """
         Returns the index associated with the macro input or output box with
         the given name. For example, if this relation includes three input
         nodes, a, b, and c, then `getMacroNodeIndex('c', True)` will return 2.
         Returns -1 if no matching macro tool can be found.
-        '''
+        """
         currentIndex = -1
         for box in self.boxes:
             if box.isMacroTool(isInput):

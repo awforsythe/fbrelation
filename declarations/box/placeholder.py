@@ -1,8 +1,8 @@
-'''
+"""
 Defines classes for placeholder boxes, which serve as proxies for scene objects
 in order to send data to or receive data from the relation constraint in which
 they're included.
-'''
+"""
 
 import pyfbsdk
 
@@ -11,14 +11,14 @@ from fbrelation.exceptions import ExecutionError
 from fbrelation.declarations.box.base import BoxDeclaration
 
 class PlaceholderBoxDeclaration(BoxDeclaration):
-    '''
+    """
     Defines the base class for placeholder box declarations, which include the
     name of a scene object that the declaration will attempt to locate at
     runtime.
-    '''
+    """
 
     class TransformationType(object):
-        '''
+        """
         Defines the space in which the placeholder box's transformations are
         expressed, if any.
 
@@ -26,18 +26,18 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
                rotation, and scaling) are used in node declarations for a box,
                all such nodes must be in the same space (global vs. local) for
                the box to compile.
-        '''
+        """
         kNone = 0 
-        ''' Indicates that no transformation nodes are referenced. '''
+        """ Indicates that no transformation nodes are referenced. """
 
         kGlobal = 1
-        ''' Indicates that global transformations are to be used. '''
+        """ Indicates that global transformations are to be used. """
 
         kLocal = 2
-        ''' Indicates that local transformations are to be used. '''
+        """ Indicates that local transformations are to be used. """
 
     def __init__(self, name, componentName):
-        '''
+        """
         Initializes a new placeholder box declaration with the given component
         name.
 
@@ -45,16 +45,16 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
                               `group::namespace:name`. If no group name is
                               specified, the name is assumed to refer to a
                               model.
-        '''
+        """
         super(PlaceholderBoxDeclaration, self).__init__(name)
         self.componentName = componentName
         self.transformation = self.TransformationType.kNone
 
     def supportsNode(self, nodeName):
-        '''
+        """
         Overridden to ensure that transformation nodes are either all global or
         all local, for cases in which the box is a placeholder for a model.
-        '''
+        """
         # If the node name is totally invalid to begin with, it's moot
         if not super(PlaceholderBoxDeclaration, self).supportsNode(nodeName):
             return False
@@ -89,10 +89,10 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
         return True
 
     def prepareNode(self, nodeName):
-        '''
+        """
         Overridden to ensure that the node with the given name exists if it
         corresponds to an animatable property.
-        '''
+        """
         # Get a reference to the actual component in the scene
         component = self._findComponent()
         assert component
@@ -103,7 +103,7 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
             prop.SetAnimated(True)
 
     def _findComponent(self):
-        '''
+        """
         Attempts to find the associated scene component based on the name given
         in the box declaration. The name is assumed to be a full name
         (group::namespace:name) if a group name is specified. Otherwise, it's
@@ -112,7 +112,7 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
         :returns: the requested scene component.
         :raises:  an :class:`.ExecutionError` if the component could not be
                   found.
-        '''
+        """
         # Attempt to find the component in the scene by name
         if '::' in self.componentName:
             component = pyfbsdk.FBFindObjectByFullName(self.componentName)
@@ -129,11 +129,11 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
         return component
 
     def _setTransformation(self, boxComponent):
-        '''
+        """
         Helper function used by subclasses to set the FBBox to the appropriate
         transformation mode once it's been created, provided it's an instance
         of FBModelPlaceHolder and transformation nodes are to be connected.
-        '''
+        """
         try:
             # Attempt to set the appropriate transformation space if the box
             # declaration's transformation type has been changed from kNone
@@ -148,20 +148,20 @@ class PlaceholderBoxDeclaration(BoxDeclaration):
             pass
 
 class SenderBoxDeclaration(PlaceholderBoxDeclaration):
-    '''
+    """
     Defines a type of placeholder box which stands in for a scene object as a
     sender, with its output nodes piping data into the relation constraint.
-    '''
+    """
 
     def execute(self, constraint, relationComponents):
-        '''
+        """
         Executes the declaration by finding the associated component in the
         scene and adding it to the provided constraint as a sender.
 
         :returns: the newly created sender box.
         :raises:  an :class:`.ExecutionError` if the named component does not
                   exist or could not be added to the constraint.
-        '''
+        """
         # Find the component to use as a source and create a sender box from it
         component = self._findComponent()
         box = constraint.SetAsSource(component)
@@ -176,20 +176,20 @@ class SenderBoxDeclaration(PlaceholderBoxDeclaration):
         return box
 
 class ReceiverBoxDeclaration(PlaceholderBoxDeclaration):
-    '''
+    """
     Defines a type of placeholder box which constrains a scene object as a
     receiver, with its input nodes receiving data from the relation constraint.
-    '''
+    """
 
     def execute(self, constraint, relationComponents):
-        '''
+        """
         Executes the declaration by finding the associated component in the
         scene and constraining it in the provided constraint as a receiver.
 
         :returns: the newly created receiver box.
         :raises:  an :class:`.ExecutionError` if the named component does not
                   exist or could not be added to the constraint.
-        '''
+        """
         # Find the component to constrain and create a receiver box for it
         component = self._findComponent()
         box = constraint.ConstrainObject(component)

@@ -1,42 +1,42 @@
-'''
+"""
 Defines classes for parsing and compiling node declarations, which consist of
 either a plain box name (indicating a macro input or output) or a box name and
 node name separated by a dot::
 
     <boxname.nodename|boxname>
-'''
+"""
 
 from fbrelation.utility import find
 
 from fbrelation.exceptions import ParsingError, CompilationError
 
 class NodeSyntax(object):
-    '''
+    """
     Represents the abstract syntax for an animation node reference within a
     connection declaration. Consists of a box name and an optional node name to
     clarify which of the box's nodes is involved in the connection. If the node
     name is blank, it is assumed that the box name by itself is sufficient to
     deduce the node, as in the case of a macro input or output box.
-    '''
+    """
 
     def __init__(self, boxName, nodeName):
-        '''
+        """
         Initializes a new node syntax object to refer to some optionally named
         node in a box with the given name.
-        '''
+        """
         self.boxName = boxName
         self.nodeName = nodeName
 
     def __str__(self):
-        '''
+        """
         Converts the syntax object into its raw string representation.
-        '''
+        """
         if self.nodeName:
             return '%s.%s' % (self.boxName, self.nodeName)
         return self.boxName
 
     def compile(self, boxes, isSrc):
-        '''
+        """
         Compiles this node syntax structure into a :class:`.NodeDeclaration`
         object as either a source or a destination node.
 
@@ -46,7 +46,7 @@ class NodeSyntax(object):
 
         :returns: The newly created node declaration.
         :raises:  a :class:`.CompilationError` if any static checks fail.
-        '''
+        """
         # Find the box declaration object that owns the node in question
         box = find(lambda b: b.name == self.boxName, boxes)
         if not box:
@@ -65,12 +65,12 @@ class NodeSyntax(object):
 
     @classmethod
     def parse(cls, text):
-        '''
+        """
         Parses the given input text to produce a new NodeSyntax object.
 
         :returns: the newly created syntax object.
         :raises:  a :class:`.ParsingError` if the syntax is invalid.
-        '''
+        """
         # If we're given a non-dotted string, treat it as a macro input or
         # output box with no explicitly specified node name
         if '.' not in text:

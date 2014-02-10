@@ -1,4 +1,4 @@
-'''
+"""
 **fbrelation**
     by Alex Forsythe <awforsythe@gmail.com> <http://awforsythe.com>
 
@@ -27,29 +27,29 @@ compilation, and execution.
    handle the instantiation and configuration of MotionBuilder objects, and
    they will throw an :class:`.ExecutionError` if they encounter problems at
    runtime.
-'''
+"""
 
 from fbrelation.exceptions import RelationException
 
 from fbrelation.syntax.program import ProgramSyntax as _ProgramSyntax
 
 def loads(string):
-    '''
+    """
     Parses, compiles, and executes a program from its provided source text.
 
     :returns: a dictionary mapping constraint declaration names to their
               corresponding FBConstraintRelation objects.
     :raises:  a :class:`.RelationException` if a program is invalid or
               unsupported.
-    '''
+    """
     syntax = _ProgramSyntax.parse(string)
     declaration = syntax.compile()
     return declaration.execute()
 
 def load(fp):
-    '''
+    """
     Parses, compiles, and executes a program from the provided open file.
 
     :note:    Returns and raises identically to loads.
-    '''
+    """
     return loads(fp.read())

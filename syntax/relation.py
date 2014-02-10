@@ -1,4 +1,4 @@
-'''
+"""
 Defines classes for parsing and compiling relation declarations, which consist
 of a name, then a series of newline-separated box and connection declarations
 inside a block of curly braces. Shell-style comments (prefixed with `#`) may be
@@ -11,7 +11,7 @@ included within the body::
         ...
         <box|connection>
     }
-'''
+"""
 
 from fbrelation.exceptions import ParsingError
 
@@ -21,27 +21,27 @@ from fbrelation.syntax.connection import ConnectionSyntax
 from fbrelation.declarations.relation import RelationDeclaration
 
 class RelationSyntax(object):
-    '''
+    """
     Represents the abstract syntax of a relation constraint declaration,
     consisting of a name, a list of box syntax objects, and a list of
     connection syntax objects. Note that order is preserved among boxes and
     among connections respectively, but that the order of connections relative
     to boxes is insignificant.
-    '''
+    """
 
     def __init__(self, name, boxes, connections):
-        '''
+        """
         Initializes a new relation syntax object with the given name and the
         the provided box and connection structures.
-        '''
+        """
         self.name = name
         self.boxes = boxes
         self.connections = connections
 
     def __str__(self):
-        '''
+        """
         Converts the syntax object into its raw string representation.
-        '''
+        """
         boxStrings = [str(box) for box in self.boxes]
         connectionStrings = [str(connection) for connection in self.connections]
 
@@ -51,7 +51,7 @@ class RelationSyntax(object):
             '\n    '.join(connectionStrings))
 
     def compile(self, relations):
-        '''
+        """
         Checks and compiles this relation constraint from its abstract syntax
         into a new :class:`.RelationDeclaration.` object.
 
@@ -60,7 +60,7 @@ class RelationSyntax(object):
 
         :returns: the newly created relation declaration.
         :raises:  a :class:`.CompilationError` if any static checks fail.
-        '''
+        """
         # Compile each relation one-by-one, accumulating them into a list
         boxDeclarations = []
         for boxSyntax in self.boxes:
@@ -76,12 +76,12 @@ class RelationSyntax(object):
 
     @classmethod
     def parse(cls, text):
-        '''
+        """
         Parses the given input text to produce a new RelationSyntax object.
 
         :returns: the newly created syntax object.
         :raises:  a :class:`.ParsingError` if syntax is invalid.
-        '''
+        """
         # Ensure that there are no extraneous braces to confuse things
         if text.count('{') != 1 or text.count('}') != 1:
             raise ParsingError(
@@ -118,16 +118,16 @@ class RelationSyntax(object):
 
     @classmethod
     def splitBodyLines(cls, text):
-        '''
+        """
         Given the input text for a relation constraint definition's body,
         returns a list of the individual lines of that definition, omitting
         whitespace and comments.
-        '''
+        """
 
         def remove_comments(line):
-            '''
+            """
             Returns the given line stripped of any comments.
-            '''
+            """
             hashPos = line.find('#')
             return line[:hashPos] if hashPos >= 0 else line
 
